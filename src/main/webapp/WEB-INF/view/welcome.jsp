@@ -11,6 +11,8 @@
 	<form action="add">
 	<input name="t1" ><br>
 	<input name="t2" ><br>
+    <input name="t3" ><br>
+
 	<button type="submit"> sub</button><br>
 	
 	</form>

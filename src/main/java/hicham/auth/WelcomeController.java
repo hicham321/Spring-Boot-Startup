@@ -1,14 +1,13 @@
 package hicham.auth;
  
 
-import java.lang.reflect.Method;
 import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import hicham.auth.Role.Role;
 import hicham.auth.user.User;
 import hicham.auth.user.UserRepository;
 
@@ -34,16 +34,30 @@ public class WelcomeController {
 		map.put("currentDate", new Date());
 		return "welcome";
 	}
+	
+	@RequestMapping("/loginPage")
+	public String getLoginPage(ModelMap map) {
+		return "loginPage";
+	}
+
 
 	@RequestMapping(value= "/add",method= RequestMethod.GET) // Map ONLY GET Requests
 	public @ResponseBody String addNewUser (@RequestParam(value="t1") String name
-			, @RequestParam(value="t2") String email) {
+			, @RequestParam(value="t2") String email,@RequestParam(value="t3") String password) {
 		// @ResponseBody means the returned String is the response, not a view name
 		// @RequestParam means it is a parameter from the GET or POST request
-
+		
+		//build roles 
+        Set roles= new HashSet<Role>();
+        Role role= new Role();
+        role.setRole("ADMI");
+        roles.add(role);
+        //add user
 		User n = new User();
 		n.setName(name);
 		n.setEmail(email);
+		n.setPassword(password);
+		n.setRoles(roles);
 		userRepository.save(n);
 		return "Saved";
 	}
@@ -60,12 +74,13 @@ public class WelcomeController {
 		return userRepository.findOne(id);
 	}
 	
-	@RequestMapping(value="/hello", method= RequestMethod.POST)
-	public String hello(HttpServletRequest request, Model model) {
-		User user= new User();
-		user.setEmail("");
-		model.addAttribute("message", null);
-		return "hello";
+	
+	
+	@PreAuthorize("hasAnyRole('ADMI')")
+	@RequestMapping(value= "/secured/all",method= RequestMethod.GET)
+	public @ResponseBody String securedHello() {
+		
+		return "Secured Hello";
 	}
 	
 }
