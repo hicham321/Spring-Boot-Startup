@@ -37,6 +37,9 @@ public class WelcomeController {
 	
 	@RequestMapping("/loginPage")
 	public String getLoginPage(ModelMap map) {
+		
+		System.out.println("geberrich loginpage");
+
 		return "loginPage";
 	}
 
@@ -79,7 +82,7 @@ public class WelcomeController {
 	@PreAuthorize("hasAnyRole('ADMI')")
 	@RequestMapping(value= "/secured/all",method= RequestMethod.GET)
 	public @ResponseBody String securedHello() {
-		
+		System.out.println("geberrich secured all");
 		return "Secured Hello";
 	}
 	

@@ -9,10 +9,10 @@
 <body>
 <h3>Login with user name and password</h3>
 <form >
-    <label>User</label>
-	<input name="userName" ><br>
-	<label>Password</label>
-	<input name="password" ><br>
+    <label for="username">Username</label>
+	<input type="text" name="username" id="username"><br>
+	<label for="password">Password</label>
+	<input type="password" id="password" name="password"/><br>
 	<button type="submit"> Login</button><br>
 
 </body>
